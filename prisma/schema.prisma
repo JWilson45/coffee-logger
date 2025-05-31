@@ -1,0 +1,47 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model Brew {
+  id           Int      @id @default(autoincrement())
+  date         String
+  coffee       String
+  roaster      String
+  origin       String
+  process      String
+  notes        String
+  grind        String
+  grinder      String
+  dripper      String
+  filter       String
+  waterType    String
+  waterTemp    String
+  dose         String
+  waterWeight  String
+  brewTime     String
+  bloom        String
+  pours        String
+  agitation    String
+  flavorHot    String
+  acidity      String
+  sweetness    String
+  body         String
+  bitterness   String
+  flavorCool   String
+  newNotes     String
+  balance      String
+  score        String
+  extraNotes   String
+  createdAt    DateTime @default(now())
+}
