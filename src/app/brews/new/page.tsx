@@ -109,6 +109,21 @@ export default function NewBrewPage() {
     setBrew({ ...brew, [e.target.name]: e.target.value });
   }
 
+  async function handleUseLastBrew() {
+    try {
+      const res = await fetch("/api/brews/latest");
+      if (!res.ok) {
+        setError("Failed to load last brew.");
+        return;
+      }
+      const { id, createdAt, ...brewData } = await res.json();
+      setBrew({ ...defaultBrew, ...brewData });
+      setError(null);
+    } catch (err: any) {
+      setError("Network error: " + err?.message);
+    }
+  }
+
   function validate(brewData: typeof defaultBrew) {
     for (const field of REQUIRED_FIELDS) {
       const value = brewData[field as keyof typeof brewData];
@@ -166,6 +181,11 @@ export default function NewBrewPage() {
 
   return (
     <main className="h-screen overflow-hidden">
+      <div className="p-4 flex justify-end">
+        <button type="button" className="btn-primary" onClick={handleUseLastBrew}>
+          Use Last Brew
+        </button>
+      </div>
       <form
         ref={formRef}
         onSubmit={handleSubmit}
