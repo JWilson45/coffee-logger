@@ -94,6 +94,24 @@ export default function NewBrewPage() {
   const [suggestions, setSuggestions] = useState<Record<string, string[]>>({});
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
+  const DRAFT_KEY = "brewDraft";
+
+  // Load saved draft on first render
+  useEffect(() => {
+    const saved = localStorage.getItem(DRAFT_KEY);
+    if (saved) {
+      try {
+        setBrew({ ...defaultBrew, ...JSON.parse(saved) });
+      } catch {
+        // ignore invalid draft
+      }
+    }
+  }, []);
+
+  // Save draft to localStorage whenever brew changes
+  useEffect(() => {
+    localStorage.setItem(DRAFT_KEY, JSON.stringify(brew));
+  }, [brew]);
 
   useEffect(() => {
     async function fetchSuggestions() {
@@ -147,11 +165,18 @@ export default function NewBrewPage() {
         setSaving(false);
         return;
       }
+      localStorage.removeItem(DRAFT_KEY);
       router.push("/brews");
-    } catch (err: any) {
-      setError("Network error: " + err?.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "";
+      setError("Network error: " + message);
       setSaving(false);
     }
+  }
+
+  function discardDraft() {
+    localStorage.removeItem(DRAFT_KEY);
+    setBrew(defaultBrew);
   }
 
   // Clear error when user navigates to a new section
@@ -448,6 +473,13 @@ export default function NewBrewPage() {
               {saving ? "Saving..." : "Save Brew"}
             </button>
             <Link href="/brews" className="btn-primary bg-gray-200 text-gray-900 hover:bg-gray-300">Cancel</Link>
+            <button
+              type="button"
+              onClick={discardDraft}
+              className="bg-red-500 text-white font-semibold py-2 px-4 rounded hover:bg-red-600"
+            >
+              Discard Draft
+            </button>
           </div>
         </section>
       </form>

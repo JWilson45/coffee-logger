@@ -86,7 +86,7 @@ export default function BrewsPage() {
         </Link>
       </div>
       {brews.length === 0 ? (
-        <div className="text-gray-500">No brews yet. Click "Add Brew" to get started!</div>
+        <div className="text-gray-500">No brews yet. Click &quot;Add Brew&quot; to get started!</div>
       ) : (
         <div className="overflow-auto border rounded-xl">
           <table className="min-w-[1500px] border-collapse text-xs">

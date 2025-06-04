@@ -17,6 +17,7 @@ export async function GET() {
   for (const field of fields) {
     const values = await prisma.brew.findMany({
       select: { [field]: true },
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       distinct: [field as any],
       take: 20,
       orderBy: { date: "desc" },
