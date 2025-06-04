@@ -73,7 +73,7 @@ export default function BrewsPage() {
     { key: "newNotes", label: "New Notes" },
     { key: "balance", label: "Balance" },
     { key: "score", label: "Score" },
-    { key: "extraNotes", label: "Notes" },
+    { key: "extraNotes", label: "Extra Notes" },
     { key: "createdAt", label: "Created" },
   ];
 
