@@ -1,5 +1,5 @@
 // File: src/app/api/brews/suggestions/route.ts
-import { PrismaClient } from "@prisma/client";
+import { Prisma, PrismaClient } from "@prisma/client";
 import { NextResponse } from "next/server";
 
 const prisma = new PrismaClient();
@@ -17,7 +17,7 @@ export async function GET() {
   for (const field of fields) {
     const values = await prisma.brew.findMany({
       select: { [field]: true },
-      distinct: [field as any],
+      distinct: [field as Prisma.BrewScalarFieldEnum],
       take: 20,
       orderBy: { date: "desc" },
     }) as Array<Record<string, unknown>>;
