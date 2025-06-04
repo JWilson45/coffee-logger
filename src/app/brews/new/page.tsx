@@ -148,8 +148,9 @@ export default function NewBrewPage() {
         return;
       }
       router.push("/brews");
-    } catch (err: any) {
-      setError("Network error: " + err?.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : "Unknown error";
+      setError("Network error: " + message);
       setSaving(false);
     }
   }
