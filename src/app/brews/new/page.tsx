@@ -94,6 +94,14 @@ export default function NewBrewPage() {
   const [suggestions, setSuggestions] = useState<Record<string, string[]>>({});
   const router = useRouter();
   const formRef = useRef<HTMLFormElement>(null);
+  const [activeSection, setActiveSection] = useState(0);
+  const sectionTitles = [
+    "Brew Details",
+    "Equipment",
+    "Water & Brewing",
+    "Tasting Notes",
+    "Evaluation",
+  ];
 
   useEffect(() => {
     async function fetchSuggestions() {
@@ -148,24 +156,53 @@ export default function NewBrewPage() {
         return;
       }
       router.push("/brews");
-    } catch (err: any) {
-      setError("Network error: " + err?.message);
+    } catch (err: unknown) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      const message = (err as any)?.message ?? "";
+      setError("Network error: " + message);
       setSaving(false);
     }
   }
 
-  // Clear error when user navigates to a new section
+  // Clear error and update active section when scrolling through the form
   useEffect(() => {
-    const handleScroll = () => setError(null);
     const formEl = formRef.current;
-    if (formEl) {
-      formEl.addEventListener("scroll", handleScroll);
-      return () => formEl.removeEventListener("scroll", handleScroll);
-    }
+    if (!formEl) return;
+    const sections = Array.from(formEl.querySelectorAll("section"));
+
+    const handleScroll = () => {
+      setError(null);
+      const scrollPos = formEl.scrollTop + formEl.clientHeight / 2;
+      let current = 0;
+      sections.forEach((sec, idx) => {
+        if (scrollPos >= sec.offsetTop) {
+          current = idx;
+        }
+      });
+      setActiveSection(current);
+    };
+
+    handleScroll();
+    formEl.addEventListener("scroll", handleScroll);
+    return () => formEl.removeEventListener("scroll", handleScroll);
   }, []);
 
   return (
     <main className="h-screen overflow-hidden">
+      <div className="fixed top-2 left-0 right-0 flex justify-center z-10 pointer-events-none">
+        <div className="flex gap-2">
+          {sectionTitles.map((_, i) => (
+            <div
+              key={i}
+              className={`w-6 h-6 flex items-center justify-center rounded-full text-xs font-bold ${
+                i === activeSection ? "bg-blue-600 text-white" : "bg-gray-300 text-gray-700"
+              }`}
+            >
+              {i + 1}
+            </div>
+          ))}
+        </div>
+      </div>
       <form
         ref={formRef}
         onSubmit={handleSubmit}
