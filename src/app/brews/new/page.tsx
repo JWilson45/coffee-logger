@@ -130,7 +130,7 @@ export default function NewBrewPage() {
     const validation = validate(brew);
     if (validation) {
       setError(validation);
-      // Scroll to top of formErrorRef if needed
+      // Scroll to top of formRef if needed
       formRef.current?.scrollIntoView({ behavior: "smooth" });
       return;
     }
