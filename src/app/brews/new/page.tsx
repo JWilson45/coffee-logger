@@ -148,10 +148,16 @@ export default function NewBrewPage() {
         return;
       }
       router.push("/brews");
-    } catch (err: any) {
-      setError("Network error: " + err?.message);
+    } catch (err: unknown) {
+      const message = err instanceof Error ? err.message : String(err);
+      setError("Network error: " + message);
       setSaving(false);
     }
+  }
+
+  function handleReset() {
+    setBrew(defaultBrew);
+    setError(null);
   }
 
   // Clear error when user navigates to a new section
@@ -446,6 +452,13 @@ export default function NewBrewPage() {
           <div className="flex gap-2 mt-6">
             <button className="btn-primary" type="submit" disabled={saving}>
               {saving ? "Saving..." : "Save Brew"}
+            </button>
+            <button
+              type="button"
+              onClick={handleReset}
+              className="btn-primary bg-gray-200 text-gray-900 hover:bg-gray-300"
+            >
+              Reset
             </button>
             <Link href="/brews" className="btn-primary bg-gray-200 text-gray-900 hover:bg-gray-300">Cancel</Link>
           </div>
