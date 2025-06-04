@@ -23,7 +23,8 @@ export async function POST(req: NextRequest) {
   try {
     const brew = await prisma.brew.create({ data });
     return NextResponse.json(brew);
-  } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+  } catch (err: unknown) {
+    const message = err instanceof Error ? err.message : String(err);
+    return NextResponse.json({ error: message }, { status: 500 });
   }
 }
